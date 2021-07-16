@@ -3,32 +3,31 @@ package com.company;
 public class Brain {
     int felder[] = new int[9];
     int aktivePlayer = 1;
-    boolean pressesFelder[] = new boolean[9];
+    boolean pressedFelder[] = new boolean[9];
 
     Brain(int startingPlayer){
         resetFelder();
         aktivePlayer = startingPlayer;
     }
     Brain(){
-        resetFelder();
+        //resetFelder();
+        printFelder();
     }
 
     public void resetFelder(){
-        for (int aFeld : felder) {
-            aFeld = 0;
-        }
-        for (boolean aFeld : pressesFelder) {
-            aFeld = false;
+        for (int i = 0; i < felder.length; i++) {
+            felder[i] = 0;
+            pressedFelder[i] = false;
         }
     }
 
     public void setFeldTo1(int feld){
         felder[feld] = 1;
-        pressesFelder[feld] = true;
+        pressedFelder[feld] = true;
     }
     public void setFeldTo2(int feld){
         felder[feld] = 2;
-        pressesFelder[feld] = true;
+        pressedFelder[feld] = true;
     }
     public int checkForWin(){
         if(felder[0] == felder[1] && felder[0] == felder[2] && felder[0] != 0){
@@ -47,10 +46,19 @@ public class Brain {
             return felder[1];
         }else if(felder[2] == felder[5] && felder[2] == felder[8] && felder[2] != 0){
             return felder[2];
+        }else if(draw()){
+            return 3;
         }
         return 0;
     }
-
+    public boolean draw(){
+        for (boolean aFeld: pressedFelder) {
+            if(!aFeld){
+                return false;
+            }
+        }
+        return true;
+    }
     public void switchAktivePlayer(){
         if(aktivePlayer == 1){
             aktivePlayer = 2;
@@ -58,13 +66,14 @@ public class Brain {
             aktivePlayer = 1;
         }
     }
-
     public void FeldClicked(int feld){
-       if(pressesFelder[feld] == false){
+       if(pressedFelder[feld] == false){
            felder[feld] = aktivePlayer;
-           pressesFelder[feld] = true;
-           if(checkForWin() != 0){
+           pressedFelder[feld] = true;
+           if(checkForWin() == 1 || checkForWin() == 2){
                System.out.println("Player " + checkForWin() + " won!");
+           }else if(checkForWin() == 3){
+               System.out.println("Unentschieden");
            }
            switchAktivePlayer();
            printFelder();
